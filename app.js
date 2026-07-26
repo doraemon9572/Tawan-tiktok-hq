@@ -1,3 +1,10 @@
+async function fetchFile(file){
+  return new Uint8Array(await file.arrayBuffer());
+}
+const { FFmpeg } = FFmpegWASM;
+
+const ffmpeg = new FFmpeg();
+
 const video = document.getElementById("video");
 const start = document.getElementById("start");
 const status = document.getElementById("status");
@@ -5,20 +12,65 @@ const status = document.getElementById("status");
 start.onclick = async () => {
 
   if (!video.files.length) {
-    alert("กรุณาเลือกไฟล์วิดีโอก่อน");
+    alert("เลือกไฟล์ก่อน");
     return;
+  }
+
+  status.innerText = "กำลังโหลด FFmpeg...";
+
+  if (!ffmpeg.loaded) {
+  await ffmpeg.load({
+  coreURL:
+  "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js",
+  wasmURL:
+  "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.wasm"
+});
   }
 
   const file = video.files[0];
 
-  status.innerText = "กำลังเตรียมไฟล์...";
+  await ffmpeg.writeFile(
+    "input.mp4",
+    await fetchFile(file)
+  );
 
-  console.log("Input:", file.name);
-  console.log("Size:", file.size);
+  status.innerText = "กำลังบีบอัด...";
 
-  setTimeout(() => {
-    status.innerText = 
-      "พร้อมแล้ว ขั้นต่อไปจะติดตั้ง FFmpeg engine";
-  }, 1000);
+  await ffmpeg.exec([
+  "-i",
+  "input.mp4",
+  "-c:v",
+  "libx264",
+  "-preset",
+  "slow",
+  "-crf",
+  "20",
+  "-pix_fmt",
+  "yuv420p",
+  "-movflags",
+  "+faststart",
+  "-c:a",
+  "aac",
+  "-b:a",
+  "128k",
+  "output.mp4"
+]);
+  
+
+  const data =
+    await ffmpeg.readFile("output.mp4");
+
+  const url =
+    URL.createObjectURL(
+      new Blob([data.buffer],
+      {type:"video/mp4"})
+    );
+
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="tiktok_hq.mp4";
+  a.click();
+
+  status.innerText="เสร็จแล้ว";
 
 };
