@@ -4,7 +4,40 @@ async function fetchFile(file){
 const { FFmpeg } = FFmpegWASM;
 
 const ffmpeg = new FFmpeg();
+let isLoaded = false;
 
+ffmpeg.on("log", ({ message }) => {
+
+    console.log(message);
+
+    const log = document.getElementById("log");
+
+    if(log){
+
+        log.textContent += message + "\n";
+
+        log.scrollTop = log.scrollHeight;
+
+    }
+
+});
+
+ffmpeg.on("progress", ({ progress })=>{
+
+    const percent=Math.round(progress*100);
+
+    const bar=document.getElementById("progress");
+
+    if(bar){
+
+        bar.value=percent;
+
+    }
+
+    status.innerText=
+    "กำลังบีบอัด... "+percent+"%";
+
+});
 const video = document.getElementById("video");
 const start = document.getElementById("start");
 const status = document.getElementById("status");
