@@ -49,25 +49,25 @@ start.onclick = async () => {
     return;
   }
 
-  if (!isLoaded) {
+ if (!isLoaded) {
 
     status.innerText = "กำลังโหลด FFmpeg...";
 
-const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
+    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
-await ffmpeg.load({
+    await ffmpeg.load({
 
-    coreURL: await FFmpegWASM.toBlobURL(
-        `${baseURL}ffmpeg-core.js`,
-        "text/javascript"
-    ),
+        coreURL: await FFmpegWASM.toBlobURL(
+            `${baseURL}ffmpeg-core.js`,
+            "text/javascript"
+        ),
 
-    wasmURL: await FFmpegWASM.toBlobURL(
-        `${baseURL}ffmpeg-core.wasm`,
-        "application/wasm"
-    )
+        wasmURL: await FFmpegWASM.toBlobURL(
+            `${baseURL}ffmpeg-core.wasm`,
+            "application/wasm"
+        )
 
-});
+    });
 
     isLoaded = true;
 
