@@ -1,3 +1,8 @@
+alert("app.js โหลดแล้ว");
+
+async function fetchFile(file){
+  return new Uint8Array(await file.arrayBuffer());
+}
 async function fetchFile(file){
   return new Uint8Array(await file.arrayBuffer());
 }
