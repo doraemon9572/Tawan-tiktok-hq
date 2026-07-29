@@ -5,6 +5,7 @@ async function fetchFile(file) {
 }
 
 const { FFmpeg } = FFmpegWASM;
+const { toBlobURL } = FFmpegUtil;
 
 const ffmpeg = new FFmpeg();
 
@@ -71,18 +72,17 @@ start.onclick = async () => {
 
             await ffmpeg.load({
 
-                coreURL: await FFmpegWASM.toBlobURL(
-                    baseURL + "ffmpeg-core.js",
-                    "text/javascript"
-                ),
+    coreURL: await toBlobURL(
+        `${baseURL}ffmpeg-core.js`,
+        "text/javascript"
+    ),
 
-                wasmURL: await FFmpegWASM.toBlobURL(
-                    baseURL + "ffmpeg-core.wasm",
-                    "application/wasm"
-                )
+    wasmURL: await toBlobURL(
+        `${baseURL}ffmpeg-core.wasm`,
+        "application/wasm"
+    )
 
-            });
-
+});
 
             isLoaded = true;
 
