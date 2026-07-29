@@ -59,8 +59,6 @@ start.onclick = async () => {
 
         wasmURL: "./ffmpeg/ffmpeg-core.wasm",
 
-        workerURL: "./ffmpeg/ffmpeg-core.worker.js"
-
     });
 
     isLoaded = true;
