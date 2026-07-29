@@ -51,14 +51,21 @@ start.onclick = async () => {
 
   status.innerText = "กำลังโหลด FFmpeg...";
 
-  if (!ffmpeg.loaded) {
+if (!isLoaded) {
+
   await ffmpeg.load({
-  coreURL:
-  "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js",
-  wasmURL:
-  "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.wasm"
-});
-  }
+
+    coreURL: "./ffmpeg/ffmpeg-core.js",
+
+    wasmURL: "./ffmpeg/ffmpeg-core.wasm",
+
+    workerURL: "./ffmpeg/ffmpeg-core.worker.js"
+
+  });
+
+  isLoaded = true;
+
+}
 
   const file = video.files[0];
 
