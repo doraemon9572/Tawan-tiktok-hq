@@ -32,7 +32,7 @@ ffmpeg.on("progress", ({ progress })=>{
 
         bar.value=percent;
 
-    }
+    }   
 
     status.innerText=
     "กำลังบีบอัด... "+percent+"%";
