@@ -1,15 +1,19 @@
 alert("app.js โหลดแล้ว");
 
-async function fetchFile(file){
-  return new Uint8Array(await file.arrayBuffer());
+async function fetchFile(file) {
+    return new Uint8Array(await file.arrayBuffer());
 }
-async function fetchFile(file){
-  return new Uint8Array(await file.arrayBuffer());
-}
+
 const { FFmpeg } = FFmpegWASM;
 
 const ffmpeg = new FFmpeg();
+
 let isLoaded = false;
+
+const video = document.getElementById("video");
+const start = document.getElementById("start");
+const status = document.getElementById("status");
+
 
 ffmpeg.on("log", ({ message }) => {
 
@@ -17,111 +21,165 @@ ffmpeg.on("log", ({ message }) => {
 
     const log = document.getElementById("log");
 
-    if(log){
-
+    if (log) {
         log.textContent += message + "\n";
-
         log.scrollTop = log.scrollHeight;
-
     }
 
 });
 
-ffmpeg.on("progress", ({ progress })=>{
 
-    const percent=Math.round(progress*100);
+ffmpeg.on("progress", ({ progress }) => {
 
-    const bar=document.getElementById("progress");
+    const percent = Math.round(progress * 100);
 
-    if(bar){
+    const bar = document.getElementById("progress");
 
-        bar.value=percent;
+    if (bar) {
+        bar.value = percent;
+    }
 
-    }   
-
-    status.innerText=
-    "กำลังบีบอัด... "+percent+"%";
+    status.innerText = "กำลังบีบอัด... " + percent + "%";
 
 });
-const video = document.getElementById("video");
-const start = document.getElementById("start");
-const status = document.getElementById("status");
+
 
 start.onclick = async () => {
 
-  if (!video.files.length) {
-    alert("เลือกไฟล์ก่อน");
-    return;
-  }
+    if (!video.files.length) {
 
-if (!isLoaded) {
+        alert("เลือกไฟล์ก่อน");
 
-    status.innerText = "กำลังโหลด FFmpeg...";
-    console.log("เริ่มโหลด ffmpeg");
+        return;
+    }
 
-    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm/";
 
-    await ffmpeg.load({
+    try {
 
-        coreURL: `${baseURL}ffmpeg-core.js`,
 
-    wasmURL: `${baseURL}ffmpeg-core.wasm`
+        if (!isLoaded) {
 
-    });
 
-    isLoaded = true;
+            status.innerText = "กำลังโหลด FFmpeg...";
 
-}
-  const file = video.files[0];
+            console.log("เริ่มโหลด FFmpeg");
 
-  await ffmpeg.writeFile(
-    "input.mp4",
-    await fetchFile(file)
-  );
 
-  status.innerText = "กำลังบีบอัด...";
+            const baseURL =
+            "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
-  await ffmpeg.exec([
-"-i","input.mp4",
 
-"-c:v","libx264",
+            await ffmpeg.load({
 
-"-preset","slow",
+                coreURL: await FFmpegWASM.toBlobURL(
+                    baseURL + "ffmpeg-core.js",
+                    "text/javascript"
+                ),
 
-"-crf","18",
+                wasmURL: await FFmpegWASM.toBlobURL(
+                    baseURL + "ffmpeg-core.wasm",
+                    "application/wasm"
+                )
 
-"-pix_fmt","yuv420p",
+            });
 
-"-profile:v","high",
 
-"-level","4.2",
+            isLoaded = true;
 
-"-movflags","+faststart",
 
-"-c:a","aac",
+            console.log("FFmpeg โหลดสำเร็จ");
 
-"-b:a","192k",
+            status.innerText = "FFmpeg พร้อมใช้งาน";
 
-"-ar","48000",
 
-"output.mp4"
-]);
-  
+        }
 
-  const data =
-    await ffmpeg.readFile("output.mp4");
 
-  const url =
-    URL.createObjectURL(
-      new Blob([data.buffer],
-      {type:"video/mp4"})
-    );
+        const file = video.files[0];
 
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="tiktok_hq.mp4";
-  a.click();
 
-  status.innerText="เสร็จแล้ว";
+        await ffmpeg.writeFile(
+            "input.mp4",
+            await fetchFile(file)
+        );
+
+
+        status.innerText = "กำลังบีบอัด...";
+
+
+        await ffmpeg.exec([
+
+            "-i",
+            "input.mp4",
+
+            "-c:v",
+            "libx264",
+
+            "-preset",
+            "slow",
+
+            "-crf",
+            "18",
+
+            "-pix_fmt",
+            "yuv420p",
+
+            "-profile:v",
+            "high",
+
+            "-level",
+            "4.2",
+
+            "-movflags",
+            "+faststart",
+
+            "-c:a",
+            "aac",
+
+            "-b:a",
+            "192k",
+
+            "-ar",
+            "48000",
+
+            "output.mp4"
+
+        ]);
+
+
+        const data = await ffmpeg.readFile("output.mp4");
+
+
+        const url = URL.createObjectURL(
+
+            new Blob(
+                [data.buffer],
+                { type:"video/mp4" }
+            )
+
+        );
+
+
+        const a = document.createElement("a");
+
+        a.href = url;
+
+        a.download = "tiktok_hq.mp4";
+
+        a.click();
+
+
+        status.innerText = "เสร็จแล้ว";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText = "เกิดข้อผิดพลาด";
+
+        alert(error.message);
+
+    }
 
 };
