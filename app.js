@@ -60,7 +60,7 @@ if (!isLoaded) {
 
         coreURL: `${baseURL}ffmpeg-core.js`,
 
-        wasmURL: ${baseURL}ffmpeg-core.wasm
+    wasmURL: `${baseURL}ffmpeg-core.wasm`
 
     });
 
