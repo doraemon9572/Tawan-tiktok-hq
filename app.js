@@ -52,17 +52,18 @@ start.onclick = async () => {
  if (!isLoaded) {
 
     status.innerText = "กำลังโหลด FFmpeg...";
-     console.log("เริ่มโหลด ffmpeg");
+    console.log("เริ่มโหลด ffmpeg");
 
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
-    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
+    await ffmpeg.load({
 
-await ffmpeg.load({
+        coreURL: `${baseURL}ffmpeg-core.js`,
 
-    coreURL: `${baseURL}ffmpeg-core.js`,
+        wasmURL: ${baseURL}ffmpeg-core.wasm
 
-    wasmURL: ${baseURL}ffmpeg-core.wasm
+    });
+
     isLoaded = true;
 
 }
