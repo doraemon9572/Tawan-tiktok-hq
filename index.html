@@ -1,26 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Tawan TikTok HQ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Tawan TikTok HQ Pro</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<h2>Tawan TikTok HQ v0.1</h2>
+<div class="container">
 
-<input type="file" id="video" accept="video/*">
+<h1>Tawan TikTok HQ Pro</h1>
 
-<button id="start">
-Compress Video
-</button>
-
-<p id="status">
-Ready
+<p>
+Compress สำหรับ TikTok คุณภาพสูง
 </p>
 
+<input
+type="file"
+id="video"
+accept="video/*">
+
+<br><br>
+
+<button id="start">
+
+เริ่มบีบอัด
+
+</button>
+
+<br><br>
+
+<progress
+id="progress"
+value="0"
+max="100"
+style="width:100%;">
+</progress>
+
+<p id="status">
+พร้อมทำงาน
+</p>
+
+<pre id="log"></pre>
+
+</div>
+
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+
 <script src="app.js"></script>
 
 </body>
