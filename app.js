@@ -52,6 +52,7 @@ start.onclick = async () => {
  if (!isLoaded) {
 
     status.innerText = "กำลังโหลด FFmpeg...";
+     console.log("เริ่มโหลด ffmpeg");
 
     const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
