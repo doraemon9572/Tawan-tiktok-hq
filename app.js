@@ -70,23 +70,29 @@ start.onclick = async () => {
   status.innerText = "กำลังบีบอัด...";
 
   await ffmpeg.exec([
-  "-i",
-  "input.mp4",
-  "-c:v",
-  "libx264",
-  "-preset",
-  "slow",
-  "-crf",
-  "20",
-  "-pix_fmt",
-  "yuv420p",
-  "-movflags",
-  "+faststart",
-  "-c:a",
-  "aac",
-  "-b:a",
-  "128k",
-  "output.mp4"
+"-i","input.mp4",
+
+"-c:v","libx264",
+
+"-preset","slow",
+
+"-crf","18",
+
+"-pix_fmt","yuv420p",
+
+"-profile:v","high",
+
+"-level","4.2",
+
+"-movflags","+faststart",
+
+"-c:a","aac",
+
+"-b:a","192k",
+
+"-ar","48000",
+
+"output.mp4"
 ]);
   
 
