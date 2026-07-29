@@ -49,7 +49,7 @@ start.onclick = async () => {
     return;
   }
 
- if (!isLoaded) {
+if (!isLoaded) {
 
     status.innerText = "กำลังโหลด FFmpeg...";
     console.log("เริ่มโหลด ffmpeg");
@@ -67,7 +67,6 @@ start.onclick = async () => {
     isLoaded = true;
 
 }
-
   const file = video.files[0];
 
   await ffmpeg.writeFile(
