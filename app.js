@@ -49,21 +49,21 @@ start.onclick = async () => {
     return;
   }
 
-  status.innerText = "กำลังโหลด FFmpeg...";
+  if (!isLoaded) {
 
-if (!isLoaded) {
+    status.innerText = "กำลังโหลด FFmpeg...";
 
-  await ffmpeg.load({
+    await ffmpeg.load({
 
-    coreURL: "./ffmpeg/ffmpeg-core.js",
+        coreURL: "./ffmpeg/ffmpeg-core.js",
 
-    wasmURL: "./ffmpeg/ffmpeg-core.wasm",
+        wasmURL: "./ffmpeg/ffmpeg-core.wasm",
 
-    workerURL: "./ffmpeg/ffmpeg-core.worker.js"
+        workerURL: "./ffmpeg/ffmpeg-core.worker.js"
 
-  });
+    });
 
-  isLoaded = true;
+    isLoaded = true;
 
 }
 
