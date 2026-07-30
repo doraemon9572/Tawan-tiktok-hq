@@ -272,13 +272,11 @@ startBtn.addEventListener("click", async () => {
     if (!isLoaded) {
       statusEl.textContent = "กำลังโหลด FFmpeg (ครั้งแรกใช้เวลาสักครู่)...";
 
-      const coreBaseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/";
-      const wrapperBaseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/";
-
+      const coreBaseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/";
       await ffmpeg.load({
         coreURL: await toBlobURL(`${coreBaseURL}ffmpeg-core.js`, "text/javascript"),
         wasmURL: await toBlobURL(`${coreBaseURL}ffmpeg-core.wasm`, "application/wasm"),
-        classWorkerURL: await toBlobURL(`${wrapperBaseURL}814.ffmpeg.js`, "text/javascript"),
+        classWorkerURL: "814.ffmpeg.js",
       });
 
       isLoaded = true;
