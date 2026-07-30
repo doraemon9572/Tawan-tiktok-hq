@@ -63,11 +63,14 @@ start.onclick = async () => {
 
             status.innerText = "กำลังโหลด FFmpeg...";
 
-            console.log("เริ่มโหลด FFmpeg");            const baseURL =
-            "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
+            console.log("เริ่มโหลด FFmpeg");            
+            
+                 const baseURL =
+            "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/";
 
             const ffmpegBaseURL =
             "https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/";
+       
 
 
            await ffmpeg.load({
