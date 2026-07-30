@@ -84,11 +84,6 @@ start.onclick = async () => {
         "application/wasm"
     ),
 
-    workerURL: await toBlobURL(
-        `${baseURL}ffmpeg-core.worker.js`,
-        "text/javascript"
-    ),
-
     classWorkerURL: await toBlobURL(
         `${ffmpegBaseURL}814.ffmpeg.js`,
         "text/javascript"
