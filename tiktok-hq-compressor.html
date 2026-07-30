@@ -182,7 +182,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/umd/index.js" crossorigin="anonymous"></script>
 <script>
 window.addEventListener("error", function (e) {
   var box = document.getElementById("status");
@@ -191,11 +190,23 @@ window.addEventListener("error", function (e) {
       (e.filename ? " (" + e.filename + ":" + e.lineno + ")" : "");
   }
 });
+
+// เขียนเองแทน @ffmpeg/util เพราะ UMD build ของแพ็กเกจนี้มีบั๊ก
+// (ไม่ยอมสร้าง global FFmpegUtil เมื่อโหลดผ่าน <script> ตรงๆ)
+async function toBlobURL(url, mimeType) {
+  const resp = await fetch(url);
+  const buf = await resp.arrayBuffer();
+  const blob = new Blob([buf], { type: mimeType });
+  return URL.createObjectURL(blob);
+}
+
+async function fetchFile(file) {
+  return new Uint8Array(await file.arrayBuffer());
+}
 </script>
 
 <script>
 const { FFmpeg } = FFmpegWASM;
-const { toBlobURL, fetchFile } = FFmpegUtil;
 
 const ffmpeg = new FFmpeg();
 let isLoaded = false;
