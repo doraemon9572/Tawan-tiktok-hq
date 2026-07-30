@@ -64,9 +64,10 @@ start.onclick = async () => {
 
             console.log("เริ่มโหลด FFmpeg");
 
-            // ใช้ jsdelivr แทน unpkg (เสถียรกว่า) และ core ตรงเวอร์ชันกับ ffmpeg wrapper
+            // ใช้ jsdelivr แทน unpkg (เสถียรกว่า)
+            // core ต้องเป็น 0.12.6 (เวอร์ชันที่คอนเฟิร์มว่ามีไฟล์ umd ครบถูกต้อง)
             const baseURL =
-                "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/";
+                "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/";
 
             const ffmpegBaseURL =
                 "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/";
