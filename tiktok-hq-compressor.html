@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tawan TikTok HQ</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(160deg, #0f0f14 0%, #1a1025 60%, #1f0f2e 100%);
+    color: #f2f2f7;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .card {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 28px 24px;
+    backdrop-filter: blur(10px);
+  }
+  h1 {
+    font-size: 22px;
+    margin: 0 0 4px;
+    background: linear-gradient(90deg, #ff2d55, #ff6b9d, #7c5cff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub { color: #a3a3ad; font-size: 14px; margin: 0 0 24px; }
+
+  .drop {
+    border: 2px dashed rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+  }
+  .drop:hover, .drop.drag { border-color: #ff6b9d; background: rgba(255,107,157,0.06); }
+  .drop input { display: none; }
+  .drop-icon { font-size: 32px; margin-bottom: 8px; }
+  .filename { margin-top: 10px; font-size: 13px; color: #ff9dc0; word-break: break-all; }
+
+  .settings {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .settings label {
+    font-size: 12px;
+    color: #a3a3ad;
+    display: block;
+    margin-bottom: 4px;
+  }
+  select {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #f2f2f7;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  button.start {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(90deg, #ff2d55, #7c5cff);
+    cursor: pointer;
+  }
+  button.start:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .progress-wrap {
+    margin-top: 18px;
+    height: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff2d55, #7c5cff);
+    transition: width .2s;
+  }
+  .status { margin-top: 12px; font-size: 13px; color: #d0d0d8; text-align: center; min-height: 18px; }
+
+  .log {
+    margin-top: 12px;
+    max-height: 140px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.35);
+    border-radius: 10px;
+    padding: 10px;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: #9a9aa8;
+    display: none;
+    white-space: pre-wrap;
+  }
+
+  .result {
+    margin-top: 16px;
+    display: none;
+  }
+  .result video { width: 100%; border-radius: 12px; }
+  a.download {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Tawan TikTok HQ</h1>
+  <p class="sub">บีบอัดวิดีโอให้คมชัด เหมาะสำหรับอัปโหลด TikTok — ทำงานในเบราว์เซอร์ล้วนๆ ไม่ต้องอัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์ใดๆ</p>
+
+  <div class="drop" id="drop">
+    <div class="drop-icon">🎬</div>
+    <div>แตะเพื่อเลือกวิดีโอ หรือลากไฟล์มาวาง</div>
+    <input type="file" id="video" accept="video/*">
+    <div class="filename" id="filename"></div>
+  </div>
+
+  <div class="settings">
+    <div>
+      <label>ความคมชัด (CRF)</label>
+      <select id="crf">
+        <option value="16">สูงสุด (ไฟล์ใหญ่)</option>
+        <option value="18" selected>สูง (แนะนำ)</option>
+        <option value="21">กลาง</option>
+        <option value="23">ประหยัดพื้นที่</option>
+      </select>
+    </div>
+    <div>
+      <label>ความเร็วเข้ารหัส</label>
+      <select id="preset">
+        <option value="veryslow">ช้าสุด (คมชัดสุด)</option>
+        <option value="slow" selected>ช้า (แนะนำ)</option>
+        <option value="medium">กลาง</option>
+        <option value="fast">เร็ว</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="start" id="start" disabled>เลือกไฟล์ก่อน</button>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="log" id="log"></div>
+
+  <div class="result" id="result">
+    <video id="preview" controls></video>
+    <a class="download" id="downloadLink" download="tiktok_hq.mp4">⬇ ดาวน์โหลดวิดีโอ</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/umd/index.js" crossorigin="anonymous"></script>
+<script>
+window.addEventListener("error", function (e) {
+  var box = document.getElementById("status");
+  if (box) {
+    box.textContent = "❌ Script error: " + (e.message || "unknown") +
+      (e.filename ? " (" + e.filename + ":" + e.lineno + ")" : "");
+  }
+});
+</script>
+
+<script>
+const { FFmpeg } = FFmpegWASM;
+const { toBlobURL, fetchFile } = FFmpegUtil;
+
+const ffmpeg = new FFmpeg();
+let isLoaded = false;
+let selectedFile = null;
+
+const dropEl = document.getElementById("drop");
+const videoInput = document.getElementById("video");
+const filenameEl = document.getElementById("filename");
+const startBtn = document.getElementById("start");
+const statusEl = document.getElementById("status");
+const progressWrap = document.getElementById("progressWrap");
+const progressBar = document.getElementById("progressBar");
+const logEl = document.getElementById("log");
+const resultEl = document.getElementById("result");
+const previewEl = document.getElementById("preview");
+const downloadLink = document.getElementById("downloadLink");
+
+dropEl.addEventListener("click", () => videoInput.click());
+["dragover", "dragenter"].forEach(evt =>
+  dropEl.addEventListener(evt, e => { e.preventDefault(); dropEl.classList.add("drag"); })
+);
+["dragleave", "drop"].forEach(evt =>
+  dropEl.addEventListener(evt, e => { e.preventDefault(); dropEl.classList.remove("drag"); })
+);
+dropEl.addEventListener("drop", e => {
+  if (e.dataTransfer.files.length) {
+    videoInput.files = e.dataTransfer.files;
+    handleFileChange();
+  }
+});
+videoInput.addEventListener("change", handleFileChange);
+
+function handleFileChange() {
+  if (videoInput.files.length) {
+    selectedFile = videoInput.files[0];
+    filenameEl.textContent = "✅ " + selectedFile.name;
+    startBtn.disabled = false;
+    startBtn.textContent = "เริ่มบีบอัด";
+    resultEl.style.display = "none";
+  }
+}
+
+ffmpeg.on("log", ({ message }) => {
+  logEl.style.display = "block";
+  logEl.textContent += message + "\n";
+  logEl.scrollTop = logEl.scrollHeight;
+});
+
+ffmpeg.on("progress", ({ progress }) => {
+  const percent = Math.min(100, Math.round(progress * 100));
+  progressBar.style.width = percent + "%";
+  statusEl.textContent = "กำลังบีบอัด... " + percent + "%";
+});
+
+startBtn.addEventListener("click", async () => {
+  if (!selectedFile) return;
+
+  startBtn.disabled = true;
+  progressWrap.style.display = "block";
+  resultEl.style.display = "none";
+
+  try {
+    if (!isLoaded) {
+      statusEl.textContent = "กำลังโหลด FFmpeg (ครั้งแรกใช้เวลาสักครู่)...";
+
+      const coreBaseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/";
+      const wrapperBaseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/";
+
+      await ffmpeg.load({
+        coreURL: await toBlobURL(`${coreBaseURL}ffmpeg-core.js`, "text/javascript"),
+        wasmURL: await toBlobURL(`${coreBaseURL}ffmpeg-core.wasm`, "application/wasm"),
+        classWorkerURL: await toBlobURL(`${wrapperBaseURL}814.ffmpeg.js`, "text/javascript"),
+      });
+
+      isLoaded = true;
+    }
+
+    const crf = document.getElementById("crf").value;
+    const preset = document.getElementById("preset").value;
+
+    statusEl.textContent = "กำลังเตรียมไฟล์...";
+    await ffmpeg.writeFile("input.mp4", await fetchFile(selectedFile));
+
+    statusEl.textContent = "กำลังบีบอัด...";
+    await ffmpeg.exec([
+      "-i", "input.mp4",
+      "-c:v", "libx264",
+      "-preset", preset,
+      "-crf", crf,
+      "-pix_fmt", "yuv420p",
+      "-profile:v", "high",
+      "-level", "4.2",
+      "-movflags", "+faststart",
+      "-c:a", "aac",
+      "-b:a", "192k",
+      "-ar", "48000",
+      "output.mp4"
+    ]);
+
+    const data = await ffmpeg.readFile("output.mp4");
+    const blob = new Blob([data.buffer], { type: "video/mp4" });
+    const url = URL.createObjectURL(blob);
+
+    previewEl.src = url;
+    downloadLink.href = url;
+    resultEl.style.display = "block";
+
+    statusEl.textContent = "เสร็จแล้ว! ✅";
+    progressBar.style.width = "100%";
+
+  } catch (error) {
+    console.error(error);
+    statusEl.textContent = "❌ เกิดข้อผิดพลาด: " + (error && error.message ? error.message : String(error));
+    logEl.style.display = "block";
+    logEl.textContent += "\n[ERROR] " + (error && error.stack ? error.stack : String(error));
+  } finally {
+    startBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
