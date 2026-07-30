@@ -63,11 +63,11 @@ start.onclick = async () => {
 
             status.innerText = "กำลังโหลด FFmpeg...";
 
-            console.log("เริ่มโหลด FFmpeg");
+            console.log("เริ่มโหลด FFmpeg");            const baseURL =
+            "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
-
-            const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/";
-
+            const ffmpegBaseURL =
+            "https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/";
 
 
            await ffmpeg.load({
@@ -84,8 +84,15 @@ start.onclick = async () => {
     workerURL: await toBlobURL(
         `${baseURL}ffmpeg-core.worker.js`,
         "text/javascript"
+    ),
+
+    classWorkerURL: await toBlobURL(
+        `${ffmpegBaseURL}814.ffmpeg.js`,
+        "text/javascript"
     )
 });
+
+            
             isLoaded = true;
 
 
