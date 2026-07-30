@@ -66,8 +66,8 @@ start.onclick = async () => {
             console.log("เริ่มโหลด FFmpeg");
 
 
-            const baseURL =
-            "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
+            const baseURL = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/";
+
 
 
            await ffmpeg.load({
