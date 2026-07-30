@@ -70,8 +70,7 @@ start.onclick = async () => {
             "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/";
 
 
-            await ffmpeg.load({
-
+           await ffmpeg.load({
     coreURL: await toBlobURL(
         `${baseURL}ffmpeg-core.js`,
         "text/javascript"
@@ -80,10 +79,13 @@ start.onclick = async () => {
     wasmURL: await toBlobURL(
         `${baseURL}ffmpeg-core.wasm`,
         "application/wasm"
+    ),
+
+    workerURL: await toBlobURL(
+        `${baseURL}ffmpeg-core.worker.js`,
+        "text/javascript"
     )
-
 });
-
             isLoaded = true;
 
 
